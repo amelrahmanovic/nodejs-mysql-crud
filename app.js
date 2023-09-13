@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL database connection configuration
 const db = mysql.createConnection({
-  host: '192.168.1.6',
+  host: 'localhost',
   port: '3306',
   user: 'root',
   password: 'root',
