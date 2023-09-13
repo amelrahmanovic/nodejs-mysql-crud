@@ -10,9 +10,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL database connection configuration
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'test',
-  password: 'Test123#',
+  host: '192.168.1.6',
+  user: 'root',
+  password: 'root',
   database: 'test',
 });
 
@@ -28,7 +28,7 @@ db.connect((err) => {
 //USERS CRUD START
 // Get all users
 app.get('/users', (req, res) => {
-    db.query('SELECT * FROM user', (err, results) => {
+    db.query('SELECT * FROM User', (err, results) => {
       if (err) {
         console.error('Error retrieving users:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -58,7 +58,7 @@ app.get('/users/:id', (req, res) => {
   // Delete a user by ID
 app.delete('/users/:id', (req, res) => {
     const userId = req.params.id;
-    db.query('DELETE FROM user WHERE UserId = ?', [userId], (err, result) => {
+    db.query('DELETE FROM User WHERE UserId = ?', [userId], (err, result) => {
       if (err) {
         console.error('Error deleting user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -75,7 +75,7 @@ app.delete('/users/:id', (req, res) => {
 // Create a new user
 app.post('/users', (req, res) => {
   const { FirstName, LastName, Email, Phone} = req.body;
-  const query = 'INSERT INTO user (FirstName, LastName, Email, Phone) VALUES (?, ?, ?, ?)';
+  const query = 'INSERT INTO User (FirstName, LastName, Email, Phone) VALUES (?, ?, ?, ?)';
   db.query(query, [FirstName, LastName, Email, Phone], (err, result) => {
     if (err) {
       console.error('Error creating user:', err);
@@ -90,7 +90,7 @@ app.post('/users', (req, res) => {
 app.put('/users/:UserId', (req, res) => {
   const UserId = req.params.UserId;
   const { FirstName, LastName, Email, Phone } = req.body;
-  const query = 'UPDATE user SET FirstName = ?, LastName = ?, Email = ?, Phone = ? WHERE UserId = ?';
+  const query = 'UPDATE User SET FirstName = ?, LastName = ?, Email = ?, Phone = ? WHERE UserId = ?';
   db.query(query, [FirstName, LastName, Email, Phone, UserId], (err, result) => {
     if (err) {
       console.error('Error updating user:', err);
@@ -110,7 +110,7 @@ app.put('/users/:UserId', (req, res) => {
 //ISSUES CRUD START
 // Get all issues
 app.get('/issues', (req, res) => {
-    db.query(`SELECT I.IssueId, I.Message, I.Created, U.FirstName+' '+U.LastName User, A.FirstName+' '+A.LastName Agent  FROM issue I LEFT JOIN agent A ON I.AgentX=A.AgentId LEFT JOIN user U ON U.UserId=I.UserX`, (err, results) => {
+    db.query(`SELECT I.IssueId, I.Message, I.Created, U.FirstName+' '+U.LastName User, A.FirstName+' '+A.LastName Agent  FROM issue I LEFT JOIN agent A ON I.AgentX=A.AgentId LEFT JOIN User U ON U.UserId=I.UserX`, (err, results) => {
       if (err) {
         console.error('Error retrieving issues:', err);
         res.status(500).json({ error: 'Internal Server Error' });
