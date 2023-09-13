@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // MySQL database connection configuration
 const db = mysql.createConnection({
   host: '192.168.1.6',
+  port: '3306',
   user: 'root',
   password: 'root',
   database: 'test',
@@ -41,7 +42,7 @@ app.get('/users', (req, res) => {
   // Get a single user by ID
 app.get('/users/:id', (req, res) => {
     const UserId = req.params.id;
-    db.query('SELECT * FROM user WHERE UserId = ?', [UserId], (err, result) => {
+    db.query('SELECT * FROM User WHERE UserId = ?', [UserId], (err, result) => {
       if (err) {
         console.error('Error retrieving user:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -110,7 +111,7 @@ app.put('/users/:UserId', (req, res) => {
 //ISSUES CRUD START
 // Get all issues
 app.get('/issues', (req, res) => {
-    db.query(`SELECT I.IssueId, I.Message, I.Created, U.FirstName+' '+U.LastName User, A.FirstName+' '+A.LastName Agent  FROM issue I LEFT JOIN agent A ON I.AgentX=A.AgentId LEFT JOIN User U ON U.UserId=I.UserX`, (err, results) => {
+    db.query(`SELECT I.IssueId, I.Message, I.Created, U.FirstName+' '+U.LastName User, A.FirstName+' '+A.LastName Agent  FROM Issue I LEFT JOIN Agent A ON I.AgentX=A.AgentId LEFT JOIN User U ON U.UserId=I.UserX`, (err, results) => {
       if (err) {
         console.error('Error retrieving issues:', err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -123,8 +124,8 @@ app.get('/issues', (req, res) => {
 // Create a new issues
 app.post('/issues', (req, res) => {
     const { Message, UserX } = req.body;
-    const query = 'INSERT INTO issue (Message, Created, UserX, AgentX, Finished) VALUES (?, ?, ?, ?, ?)';
-    const query2 = 'SELECT A.AgentId FROM agent A WHERE Active = 1 ORDER BY RAND() LIMIT 1';
+    const query = 'INSERT INTO Issue (Message, Created, UserX, AgentX, Finished) VALUES (?, ?, ?, ?, ?)';
+    const query2 = 'SELECT A.AgentId FROM Agent A WHERE Active = 1 ORDER BY RAND() LIMIT 1';
     
     var freeAgentId = null;
     
